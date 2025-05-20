@@ -1,16 +1,136 @@
 {
-	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+	"easycom": {
+		"autoscan": true,
+		"custom": {
+			"^uni-(.*)": "@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue",
+			"^qiun-(.*)": "@/uni_modules/qiun-data-charts/components/qiun-$1/qiun-$1.vue"
+		}
+	},
+	"pages": [
 		{
-			"path": "pages/index/index",
+			"path": "pages/home/home",
 			"style": {
-				"navigationBarTitleText": "uni-app"
+				"navigationBarTitleText": "学生成果收集",
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+		},
+		{
+			"path": "pages/ai-qa/ai-qa",
+			"style": {
+				"navigationBarTitleText": "智能问答"
+			}
+		},
+		{
+			"path": "pages/multi-report/multi-report",
+			"style": {
+				"navigationBarTitleText": "学生综测"
+			}
+		},
+		{
+			"path": "pages/competition/competition",
+			"style": {
+				"navigationBarTitleText": "竞赛类"
+			}
+		},
+		{
+			"path": "pages/profile/profile",
+			"style": {
+				"navigationBarTitleText": "个人信息"
+			}
+		},
+		{
+			"path": "pages/honor/honor",
+			"style": {
+				"navigationBarTitleText": "荣誉奖项"
+			}
+		},
+		{
+			"path": "pages/result-form/result-form",
+			"style": {
+				"navigationBarTitleText": "成果表单"
+			}
+		},
+		{
+			"path": "pages/research/research",
+			"style": {
+				"navigationBarTitleText": "科研类"
+			}
+		},
+		{
+			"path": "pages/research/activity-form/activity-form",
+			"style": {
+				"navigationBarTitleText": "学术活动"
+			}
+		},
+		{
+			"path": "pages/research/paper-form/paper-form",
+			"style": {
+				"navigationBarTitleText": "学术论文"
+			}
+		},
+		{
+			"path": "pages/student-info/student-info",
+			"style": {
+				"navigationBarTitleText": "学生综测信息"
+			}
+		},
+		{
+			"path": "pages/materials-collection/materials-collection",
+			"style": {
+				"navigationBarTitleText": "材料提交"
+			}
+		},
+		{
+			"path": "pages/innovation-report/innovation-report",
+			"style": {
+				"navigationBarTitleText": "学情报告"
+			}
+		},
+		{
+			"path": "pages/resume/resume",
+			"style": {
+				"navigationBarTitleText": "简历模板生成"
 			}
 		}
 	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "uni-app",
+		"navigationBarTitleText": "学生成果收集",
 		"navigationBarBackgroundColor": "#F8F8F8",
 		"backgroundColor": "#F8F8F8"
+	},
+	"tabBar": {
+		"color": "#7A7E83",
+		"selectedColor": "#409EFF",
+		"borderStyle": "black",
+		"backgroundColor": "#ffffff",
+		"list": [
+			{
+				"pagePath": "pages/home/home",
+				"iconPath": "static/tabbar/home.png",
+				"selectedIconPath": "static/tabbar/home-active.png",
+				"text": "首页"
+			},
+			{
+				"pagePath": "pages/ai-qa/ai-qa",
+				"iconPath": "static/tabbar/qa.png",
+				"selectedIconPath": "static/tabbar/qa-active.png",
+				"text": "智能问答"
+			},
+			{
+				"pagePath": "pages/multi-report/multi-report",
+				"iconPath": "static/tabbar/report.png",
+				"selectedIconPath": "static/tabbar/report-active.png",
+				"text": "综测"
+			},
+			{
+				"pagePath": "pages/profile/profile",
+				"iconPath": "static/tabbar/user.png",
+				"selectedIconPath": "static/tabbar/user-active.png",
+				"text": "我的"
+			}
+		]
 	}
 }
