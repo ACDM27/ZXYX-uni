@@ -20,3 +20,5 @@ dist
 *.njsproj
 *.sln
 *.sw?
+
+.env.localhost
