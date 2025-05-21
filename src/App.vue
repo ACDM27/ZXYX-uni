@@ -2,6 +2,7 @@
 import { getToken } from '@/utils/storage'
 import { useUserStore } from '@/store/user'
 import { onLaunch, onShow, onHide } from '@dcloudio/uni-app'
+import CustomTabBar from './components/tabbar/custom-tab-bar.vue'
 
 // 获取user store
 const userStore = useUserStore()
