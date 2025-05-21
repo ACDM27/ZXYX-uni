@@ -73,34 +73,14 @@
                 </view>
             </view>
 
-            <!-- 数据采集区域 -->
-            <view class="card-section" v-if="currentTab === 'data' || currentTab === 'all'">
+            <!-- 荣誉展示区域 -->
+            <view class="card-section" v-if="currentTab === 'honor' || currentTab === 'all'">
                 <view class="section-header">
-                    <text>数据采集</text>
+                    <text>荣誉展示</text>
                 </view>
                 <view class="app-grid">
                     <view 
-                        v-for="(app, index) in appItems.data"
-                        :key="index"
-                        class="app-item"
-                        @tap="openApp(app)"
-                    >
-                        <view class="app-icon" :style="{ backgroundColor: app.bgColor }">
-                            <uni-icons :type="app.icon" size="24" color="#fff" />
-                        </view>
-                        <text class="app-name">{{ app.name }}</text>
-                    </view>
-                </view>
-            </view>
-
-            <!-- 智能问答区域 -->
-            <view class="card-section" v-if="currentTab === 'qa' || currentTab === 'all'">
-                <view class="section-header">
-                    <text>智能问答</text>
-                </view>
-                <view class="app-grid">
-                    <view 
-                        v-for="(app, index) in appItems.qa"
+                        v-for="(app, index) in appItems.honor"
                         :key="index"
                         class="app-item"
                         @tap="openApp(app)"
@@ -126,38 +106,22 @@ export default {
             tabs: [
                 { title: '全部', key: 'all' },
                 { title: '热门推荐', key: 'hot' },
-                { title: '数据采集', key: 'data' },
-                { title: '智能问答', key: 'qa' }
+                { title: '荣誉展示', key: 'honor' }
+            ],
+            features: [
+                { title: '个人中心', icon: 'person', path: '/pages/profile/profile' },
+                { title: '荣誉奖项', icon: 'medal', path: '/pages/honor/honor' }
             ],
             hotItems: [
                 { 
-                    title: '近期竞赛推荐', 
-                    image: '/static/img/cover/近期竞赛推荐.jpg',
-                    path: '/pages/competition/competition'
-                },
-                { 
-                    title: '学情报告', 
-                    image: '/static/img/cover/学情报告.jpg',
-                    path: '/pages/innovation-report/innovation-report'
-                },
-                { 
-                    title: '简历模板生成', 
-                    image: '/static/img/cover/简历模版生成.jpg',
-                    path: '/pages/resume/resume'
+                    title: '荣誉奖项', 
+                    image: '/static/img/cover/honor.jpg',
+                    path: '/pages/honor/honor'
                 }
             ],
             appItems: {
-                data: [
-                    { name: '科研成果', icon: 'file', bgColor: '#64B5F6', path: '/pages/research/research' },
-                    { name: '比赛成果', icon: 'folder', bgColor: '#9575CD', path: '/pages/competition/competition' },
-                    { name: '学生综测信息', icon: 'upload', bgColor: '#4CAF50', path: '/pages/student-info/student-info' },
-                    { name: '材料提交', icon: 'upload', bgColor: '#26A69A', path: '/pages/materials-collection/materials-collection' }
-                ],
-                qa: [
-                    { name: '专业思想解答', icon: 'chat', bgColor: '#78909C', path: '/pages/professional-qa/professional-qa' },
-                    { name: '学科思维', icon: 'comment', bgColor: '#7E57C2', path: '/pages/subject-thinking/subject-thinking' },
-                    { name: '选项课程生成', icon: 'bar-chart', bgColor: '#42A5F5', path: '/pages/course-generation/course-generation' },
-                    { name: '交叉学科指导', icon: 'settings', bgColor: '#FF7043', path: '/pages/cross-discipline/cross-discipline' }
+                honor: [
+                    { name: '荣誉奖项', icon: 'medal', bgColor: '#FFD700', path: '/pages/honor/honor' }
                 ]
             }
         }

@@ -2,12 +2,12 @@
   <view class="profile">
     <view class="profile-header">
       <view class="avatar-container">
-        <image class="avatar" src="/static/images/avatar.png" mode="aspectFill" />
+        <image class="avatar" :src="userInfo?.avatar || '/static/images/avatar.png'" mode="aspectFill" />
         <view class="upload-btn" @tap="uploadAvatar">
           <uni-icons type="camera" size="14" color="#fff" />
         </view>
       </view>
-      <text class="welcome">欢迎, 黄坤</text>
+      <text class="welcome">欢迎, {{ userStore.username || '同学' }}</text>
     </view>
 
     <view class="info-card">
@@ -17,19 +17,19 @@
       </view>
       <view class="info-item">
         <text class="label">学校</text>
-        <text class="value">广西警察学院</text>
+        <text class="value">{{ userInfo?.meta?.school || '未设置' }}</text>
       </view>
       <view class="info-item">
         <text class="label">学院</text>
-        <text class="value">信息技术学院</text>
+        <text class="value">{{ userInfo?.meta?.college || '未设置' }}</text>
       </view>
       <view class="info-item">
         <text class="label">专业</text>
-        <text class="value">数据科学与大数据技术</text>
+        <text class="value">{{ userInfo?.meta?.major || '未设置' }}</text>
       </view>
       <view class="info-item">
         <text class="label">学号</text>
-        <text class="value">22104030243</text>
+        <text class="value">{{ userInfo?.meta?.student_id || '未设置' }}</text>
       </view>
     </view>
 
@@ -56,33 +56,56 @@
 </template>
 
 <script>
+import { useUserStore } from '@/store/user'
+
 export default {
   data() {
-    return {}
+    return {
+      userStore: useUserStore()
+    }
+  },
+  computed: {
+    userInfo() {
+      return this.userStore.userInfo
+    }
+  },
+  onShow() {
+    // 每次显示页面时刷新用户信息
+    this.refreshUserInfo()
   },
   methods: {
+    async refreshUserInfo() {
+      if (!this.userInfo) {
+        await this.userStore.fetchUserInfo()
+      }
+    },
     uploadAvatar() {
-      uni.showToast({
-        title: '上传头像功能开发中',
-        icon: 'none'
+      uni.chooseImage({
+        count: 1,
+        sizeType: ['compressed'],
+        sourceType: ['album', 'camera'],
+        success: (res) => {
+          // TODO: 实现头像上传逻辑
+          uni.showToast({
+            title: '头像上传功能开发中',
+            icon: 'none'
+          })
+        }
       })
     },
     editProfile() {
-      uni.showToast({
-        title: '编辑资料功能开发中',
-        icon: 'none'
+      uni.navigateTo({
+        url: '/pages/profile/edit'
       })
     },
     changePassword() {
-      uni.showToast({
-        title: '修改密码功能开发中',
-        icon: 'none'
+      uni.navigateTo({
+        url: '/pages/profile/change-password'
       })
     },
     aboutUs() {
-      uni.showToast({
-        title: '关于我们功能开发中',
-        icon: 'none'
+      uni.navigateTo({
+        url: '/pages/about/about'
       })
     },
     logout() {
@@ -91,12 +114,20 @@ export default {
         content: '确定要退出登录吗？',
         success: (res) => {
           if (res.confirm) {
-            // 清除登录信息
-            uni.removeStorageSync('token')
+            // 清除用户信息和token
+            this.userStore.clearUserInfo()
+            uni.removeStorageSync('access_token')
+            uni.removeStorageSync('refresh_token')
+            uni.removeStorageSync('token_expires_in')
+            uni.removeStorageSync('token_type')
+            uni.removeStorageSync('isLogin')
+            
             uni.showToast({
               title: '已成功退出登录',
               icon: 'success'
             })
+            
+            // 重定向到登录页
             uni.reLaunch({
               url: '/pages/login/login'
             })

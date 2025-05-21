@@ -8,6 +8,7 @@ pnpm-debug.log*
 lerna-debug.log*
 
 node_modules
+node_cache
 .DS_Store
 dist
 *.local
@@ -19,3 +20,5 @@ dist
 *.njsproj
 *.sln
 *.sw?
+
+.env.localhost
