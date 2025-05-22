@@ -121,7 +121,7 @@ export default {
 }
 
 .header-area {
-  background-color: #409EFF;
+  background-color: #4169E1;
   padding: 80rpx 32rpx 200rpx;
   position: relative;
   z-index: 1;
@@ -129,7 +129,7 @@ export default {
 
 .blue-block {
   height: 320rpx;
-  background-color: #409EFF;
+  background-color: #4169E1;
   position: absolute;
   top: 0;
   left: 0;
@@ -150,18 +150,18 @@ export default {
   flex: 1;
   height: 4rpx;
   width: 120rpx;
-  background: linear-gradient(90deg, transparent, #fff);
+  background: linear-gradient(90deg, transparent, #FFFFFF);
   position: relative;
 }
 
 .title-decoration.left {
   margin-right: 30rpx;
-  background: linear-gradient(90deg, transparent, #fff);
+  background: linear-gradient(90deg, transparent, #FFFFFF);
 }
 
 .title-decoration.right {
   margin-left: 30rpx;
-  background: linear-gradient(90deg, #fff, transparent);
+  background: linear-gradient(90deg, #FFFFFF, transparent);
 }
 
 .title-decoration::before {
@@ -170,7 +170,7 @@ export default {
   width: 12rpx;
   height: 12rpx;
   border-radius: 50%;
-  background-color: #fff;
+  background-color: #FFFFFF;
   top: -4rpx;
 }
 

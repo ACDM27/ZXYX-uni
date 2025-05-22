@@ -11,12 +11,70 @@
             
             <!-- 搜索框区域 -->
             <view class="search-container">
-                <uni-search-bar
-                    v-model="searchText"
-                    placeholder="请输入你想搜索的内容"
-                    @confirm="search"
-                    @clear="clear"
-                />
+                <view class="search-box" @tap="openSearchDrawer">
+                    <uni-icons type="search" size="16" color="#999"></uni-icons>
+                    <text class="search-placeholder">请输入你想搜索的内容</text>
+                    <uni-icons type="scan" size="20" color="#999"></uni-icons>
+                </view>
+            </view>
+        </view>
+
+        <!-- 搜索抽屉 -->
+        <view class="search-drawer" :class="{ 'drawer-show': isSearchDrawerOpen }" @tap.stop="closeSearchDrawer">
+            <view class="drawer-mask"></view>
+            <view class="drawer-content">
+                <view class="drawer-header">
+                    <view class="search-input-box">
+                        <uni-icons type="search" size="16" color="#999"></uni-icons>
+                        <input 
+                            type="text" 
+                            v-model="searchText" 
+                            placeholder="请输入你想搜索的内容" 
+                            placeholder-class="placeholder"
+                            focus
+                            @input="onSearchInput"
+                        />
+                        <uni-icons 
+                            v-if="searchText" 
+                            type="clear" 
+                            size="16" 
+                            color="#999" 
+                            @tap="clear"
+                        ></uni-icons>
+                    </view>
+                    <text class="cancel-btn" @tap="closeSearchDrawer">取消</text>
+                </view>
+
+                <!-- 搜索结果区域 -->
+                <scroll-view class="search-results" scroll-y>
+                    <view v-if="searchText" class="result-list">
+                        <view 
+                            v-for="(item, index) in searchResults" 
+                            :key="index" 
+                            class="result-item"
+                            @tap="handleResultClick(item)"
+                        >
+                            <uni-icons type="search" size="16" color="#999"></uni-icons>
+                            <text class="result-text">{{ item.title }}</text>
+                        </view>
+                    </view>
+                    <view v-else class="history-section">
+                        <view class="history-header">
+                            <text>搜索历史</text>
+                            <uni-icons type="trash" size="16" color="#999" @tap="clearHistory"></uni-icons>
+                        </view>
+                        <view class="history-list">
+                            <view 
+                                v-for="(item, index) in searchHistory" 
+                                :key="index"
+                                class="history-item"
+                                @tap="useHistoryItem(item)"
+                            >
+                                <text>{{ item }}</text>
+                            </view>
+                        </view>
+                    </view>
+                </scroll-view>
             </view>
         </view>
 
@@ -100,6 +158,7 @@
 export default {
     data() {
         return {
+            isSearchDrawerOpen: false,
             searchText: '',
             currentTab: 'all',
             activeSection: '',
@@ -109,7 +168,7 @@ export default {
                 { title: '荣誉展示', key: 'honor' }
             ],
             features: [
-                { title: '个人中心', icon: 'person', path: '/pages/profile/profile' },
+                { title: '成果填报', icon: 'person', path: '/pages/form/form' },
                 { title: '荣誉奖项', icon: 'medal', path: '/pages/honor/honor' }
             ],
             hotItems: [
@@ -123,15 +182,57 @@ export default {
                 honor: [
                     { name: '荣誉奖项', icon: 'medal', bgColor: '#FFD700', path: '/pages/honor/honor' }
                 ]
-            }
+            },
+            searchHistory: [],
+            searchResults: []
         }
     },
     methods: {
-        search() {
-            console.log('搜索:', this.searchText)
+        openSearchDrawer(e) {
+            e.stopPropagation()
+            this.isSearchDrawerOpen = true
+        },
+        closeSearchDrawer() {
+            if (this.isSearchDrawerOpen) {
+                this.isSearchDrawerOpen = false
+                this.searchText = ''
+                this.searchResults = []
+            }
+        },
+        onSearchInput() {
+            // 模拟搜索结果
+            if (this.searchText) {
+                this.searchResults = [
+                    { title: this.searchText + ' - 搜索结果1' },
+                    { title: this.searchText + ' - 搜索结果2' },
+                    { title: this.searchText + ' - 搜索结果3' }
+                ]
+            } else {
+                this.searchResults = []
+            }
+        },
+        handleResultClick(item) {
+            // 处理搜索结果点击
+            console.log('选中:', item.title)
+            if (this.searchText && !this.searchHistory.includes(this.searchText)) {
+                this.searchHistory.unshift(this.searchText)
+                // 限制历史记录数量
+                if (this.searchHistory.length > 10) {
+                    this.searchHistory.pop()
+                }
+            }
+            this.closeSearchDrawer()
+        },
+        clearHistory() {
+            this.searchHistory = []
+        },
+        useHistoryItem(item) {
+            this.searchText = item
+            this.onSearchInput()
         },
         clear() {
             this.searchText = ''
+            this.searchResults = []
         },
         toggleSection(section) {
             this.activeSection = this.activeSection === section ? '' : section
@@ -166,38 +267,217 @@ export default {
 }
 
 .header-area {
-    background-color: #fff;
-    padding: 20rpx;
+    background: linear-gradient(180deg, #4169E1 0%, #1E90FF 100%);
+    padding: 60rpx 20rpx 30rpx;
     position: relative;
     z-index: 1;
+    box-shadow: 0 4rpx 12rpx rgba(64, 158, 255, 0.1);
 }
 
 .honor-title-container {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 20rpx;
+    margin: 40rpx 0;
 }
 
 .honor-title {
-    font-size: 36rpx;
+    font-size: 44rpx;
     font-weight: bold;
-    margin: 0 20rpx;
+    margin: 0 30rpx;
+    color: #FFFFFF;
+    letter-spacing: 2rpx;
 }
 
 .title-decoration {
-    width: 60rpx;
-    height: 2rpx;
-    background-color: #000;
+    width: 80rpx;
+    height: 3rpx;
+    background-color: #FFFFFF;
+    opacity: 0.8;
 }
 
 .search-container {
-    margin: 20rpx 0;
+    margin: 30rpx 0;
+    padding: 0 30rpx;
+}
+
+.search-box {
+    display: flex;
+    align-items: center;
+    background-color: #FFFFFF;
+    border-radius: 35rpx;
+    padding: 15rpx 25rpx;
+    margin-right: 10rpx;
+    height: 80rpx;
+    box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
+    width: 600rpx;
+}
+
+.search-placeholder {
+    flex: 1;
+    margin: 0 20rpx;
+    font-size: 28rpx;
+    color: #999;
+}
+
+.search-drawer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 999;
+    visibility: hidden;
+}
+
+.drawer-show {
+    visibility: visible;
+}
+
+.drawer-mask {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.2);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.drawer-show .drawer-mask {
+    opacity: 1;
+}
+
+.drawer-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transform: translateY(-100%);
+    transition: all 0.3s ease-out;
+    min-height: 40vh;
+    max-height: 60vh;
+    box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
+}
+
+.drawer-show .drawer-content {
+    transform: translateY(0);
+}
+
+.drawer-show .drawer-mask {
+    opacity: 1;
+}
+
+.drawer-header {
+    padding: 30rpx;
+    display: flex;
+    align-items: center;
+    border-bottom: 1rpx solid rgba(238, 238, 238, 0.6);
+    background-color: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.search-input-box {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    background-color: rgba(245, 245, 245, 0.8);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border-radius: 35rpx;
+    padding: 15rpx 25rpx;
+    margin-right: 30rpx;
+    height: 80rpx;
+}
+
+.search-input-box .uni-icons {
+    font-size: 36rpx;
+}
+
+.search-input-box input {
+    flex: 1;
+    margin: 0 25rpx;
+    font-size: 32rpx;
+    height: 80rpx;
+    line-height: 80rpx;
+}
+
+.cancel-btn {
+    font-size: 32rpx;
+    color: #409EFF;
+    padding: 20rpx;
+}
+
+.placeholder {
+    font-size: 32rpx;
+    color: #999;
+}
+
+.search-results {
+    height: calc(60vh - 120rpx);
+    overflow-y: auto;
+}
+
+.result-list {
+    padding: 20rpx 30rpx;
+}
+
+.result-item {
+    display: flex;
+    align-items: center;
+    padding: 25rpx 20rpx;
+    border-bottom: 1rpx solid rgba(238, 238, 238, 0.6);
+    background-color: rgba(255, 255, 255, 0.6);
+}
+
+.result-text {
+    margin-left: 20rpx;
+    font-size: 28rpx;
+    color: #333;
+}
+
+.history-section {
+    padding: 20rpx 30rpx;
+}
+
+.history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20rpx;
+}
+
+.history-header text {
+    font-size: 28rpx;
+    color: #333;
+    font-weight: bold;
+}
+
+.history-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20rpx;
+    padding-bottom: 30rpx;
+}
+
+.history-item {
+    background-color: rgba(245, 245, 245, 0.8);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    padding: 10rpx 20rpx;
+    border-radius: 30rpx;
+    font-size: 24rpx;
+    color: #666;
 }
 
 .blue-block {
-    height: 200rpx;
-    background-color: #409EFF;
+    height: 260rpx;
+    background: linear-gradient(180deg, #4169E1 0%, #1E90FF 100%);
     position: absolute;
     top: 0;
     left: 0;
@@ -211,31 +491,58 @@ export default {
     padding: 20rpx;
 }
 
+.features-container {
+    position: relative;
+    z-index: 1;
+    margin-top: -40rpx;
+    padding: 0;
+}
+
 .features-grid {
+    background-color: #fff;
+    border-radius: 30rpx;
+    margin: 0 20rpx;
+    padding: 30rpx;
+    box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.05);
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 20rpx;
-    padding: 20rpx;
 }
 
 .feature-item {
-    background-color: #fff;
-    border-radius: 10rpx;
-    padding: 30rpx;
-    box-shadow: 0 2rpx 12rpx 0 rgba(0, 0, 0, 0.1);
+    background-color: #f8f9fd;
+    border-radius: 24rpx;
+    padding: 40rpx 30rpx;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.feature-item:active {
+    transform: scale(0.98);
 }
 
 .feature-content {
     display: flex;
     align-items: center;
+    width: 100%;
 }
 
 .feature-icon {
+    width: 80rpx;
+    height: 80rpx;
+    background-color: #fff;
+    border-radius: 20rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     margin-right: 20rpx;
 }
 
 .feature-title {
-    font-size: 28rpx;
+    font-size: 32rpx;
+    color: #333;
+    flex: 1;
 }
 
 .tabs-container {

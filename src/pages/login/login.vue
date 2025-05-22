@@ -10,40 +10,40 @@
     </view>
     <view class="content-section">
       <view class="form-container">
-        <form @submit.prevent="handleSubmit">
-          <view class="form-group">
-            <text class="label">用户名</text>
-            <input 
-              class="uni-input" 
-              type="text" 
-              v-model="form.username" 
-              placeholder="请输入用户名"
-              @blur="validateUsername"
-            />
-            <text class="error-text" v-if="errors.username">{{ errors.username }}</text>
-          </view>
-          <view class="form-group">
-            <text class="label">密码</text>
-            <input 
-              class="uni-input" 
-              type="password" 
-              v-model="form.password" 
-              placeholder="请输入密码"
-              @blur="validatePassword"
-            />
-            <text class="error-text" v-if="errors.password">{{ errors.password }}</text>
-          </view>
-          <button 
-            class="submit-btn" 
-            type="primary" 
-            @tap="handleSubmit"
-            :disabled="loading"
-          >{{ loading ? '登录中...' : '登录' }}</button>
+    <form @submit.prevent="handleSubmit">
+      <view class="form-group">
+        <text class="label">用户名</text>
+        <input 
+          class="uni-input" 
+          type="text" 
+          v-model="form.username" 
+          placeholder="请输入用户名"
+          @blur="validateUsername"
+        />
+        <text class="error-text" v-if="errors.username">{{ errors.username }}</text>
+      </view>
+      <view class="form-group">
+        <text class="label">密码</text>
+        <input 
+          class="uni-input" 
+          type="password" 
+          v-model="form.password" 
+          placeholder="请输入密码"
+          @blur="validatePassword"
+        />
+        <text class="error-text" v-if="errors.password">{{ errors.password }}</text>
+      </view>
+      <button 
+        class="submit-btn" 
+        type="primary" 
+        @tap="handleSubmit"
+        :disabled="loading"
+      >{{ loading ? '登录中...' : '登录' }}</button>
           <view class="action-links">
             <text class="link-text" @tap="handleRegister">用户注册</text>
             <text class="link-text" @tap="handleForgetPassword">忘记密码</text>
           </view>
-        </form>
+    </form>
         <view class="third-party-login">
           <view class="divider">
             <text class="divider-text">第三方登录</text>
@@ -221,7 +221,7 @@ export default {
     padding: 60rpx 40rpx 120rpx;
     
     .title-container {
-      .login-title {
+  .login-title {
         display: flex;
         flex-direction: column;
         align-items: flex-start;
@@ -235,7 +235,7 @@ export default {
         
         .system-name {
           font-size: 48rpx;
-          font-weight: bold;
+    font-weight: bold;
           color: #ffffff;
         }
       }
@@ -257,53 +257,53 @@ export default {
       flex: 1;
       display: flex;
       flex-direction: column;
-      
-      .form-group {
+  
+  .form-group {
         margin-bottom: 40rpx;
         padding: 0 15rpx;
-        
-        .label {
-          display: block;
-          margin-bottom: 20rpx;
+    
+    .label {
+      display: block;
+      margin-bottom: 20rpx;
           font-size: 35rpx;
           color: #333;
           padding: 0 5rpx;
-        }
-        
-        .uni-input {
-          width: 100%;
-          height: 80rpx;
-          border: 1rpx solid #dcdfe6;
-          border-radius: 8rpx;
-          padding: 0 20rpx;
+    }
+    
+    .uni-input {
+      width: 100%;
+      height: 80rpx;
+      border: 1rpx solid #dcdfe6;
+      border-radius: 8rpx;
+      padding: 0 20rpx;
           font-size: 32rpx;
           box-sizing: border-box;
-          
-          &.error {
-            border-color: #f56c6c;
-          }
-        }
-        
-        .error-text {
-          font-size: 30rpx;
-          color: #f56c6c;
-          margin-top: 8rpx;
-          padding: 0 5rpx;
-        }
-      }
       
-      .submit-btn {
+      &.error {
+        border-color: #f56c6c;
+      }
+    }
+    
+    .error-text {
+          font-size: 30rpx;
+      color: #f56c6c;
+      margin-top: 8rpx;
+          padding: 0 5rpx;
+    }
+  }
+  
+  .submit-btn {
         margin: 100rpx 15rpx 30rpx;
         width: calc(100% - 30rpx);
-        height: 88rpx;
-        line-height: 88rpx;
-        font-size: 32rpx;
+    height: 88rpx;
+    line-height: 88rpx;
+    font-size: 32rpx;
         border-radius: 44rpx;
         background: linear-gradient(135deg, #4e8cff 0%, #2d5cff 100%);
-        
-        &[disabled] {
-          opacity: 0.7;
-          cursor: not-allowed;
+    
+    &[disabled] {
+      opacity: 0.7;
+      cursor: not-allowed;
         }
       }
 

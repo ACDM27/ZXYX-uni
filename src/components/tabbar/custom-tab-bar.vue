@@ -87,18 +87,18 @@ export default {
   box-shadow: 0 -2rpx 10rpx rgba(0, 0, 0, 0.05);
   z-index: 999;
 }
-
+  
 .custom-tab-bar .tab-item {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 10rpx 0;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10rpx 0;
 }
-
+    
 .custom-tab-bar .tab-item .tab-text {
-  font-size: 24rpx;
+      font-size: 24rpx;
   margin-top: 8rpx;
 }
 </style> 

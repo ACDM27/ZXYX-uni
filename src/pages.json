@@ -33,6 +33,12 @@
 			"style": {
 				"navigationBarTitleText": "荣誉奖项"
 			}
+		},
+		{
+			"path": "pages/form/form",
+			"style": {
+				"navigationBarTitleText": "成果信息收集"
+			}
 		}
 	],
 	"globalStyle": {
