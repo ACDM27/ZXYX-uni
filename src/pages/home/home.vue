@@ -28,8 +28,8 @@
                         <uni-icons type="search" size="16" color="#999"></uni-icons>
                         <input 
                             type="text" 
-                            v-model="searchText" 
-                            placeholder="请输入你想搜索的内容" 
+                    v-model="searchText"
+                    placeholder="请输入你想搜索的内容"
                             placeholder-class="placeholder"
                             focus
                             @input="onSearchInput"
@@ -168,12 +168,12 @@ export default {
                 { title: '荣誉展示', key: 'honor' }
             ],
             features: [
-                { title: '成果填报', icon: 'person', path: '/pages/form/form' },
-                { title: '荣誉奖项', icon: 'medal', path: '/pages/honor/honor' }
+                { title: '成果填报', icon: 'person', path: '/pages/channel-form/channel-form' },
+                { title: '竞赛信息', icon: 'medal', path: '/pages/messages/messages' }
             ],
             hotItems: [
                 { 
-                    title: '荣誉奖项', 
+                    title: '智能问答', 
                     image: '/static/img/cover/honor.jpg',
                     path: '/pages/honor/honor'
                 }

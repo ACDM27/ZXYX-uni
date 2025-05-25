@@ -17,6 +17,17 @@
 			}
 		},
 		{
+			"path": "pages/messages/messages",
+			"style": {
+				"navigationBarTitleText": "竞赛推荐",
+				"navigationBarBackgroundColor": "#4169E1",
+				"navigationBarTextStyle": "white",
+				"app-plus": {
+					"titleNView": false
+				}
+			}
+		},
+		{
 			"path": "pages/login/login",
 			"style": {
 				"navigationBarTitleText": "登录"
@@ -35,9 +46,39 @@
 			}
 		},
 		{
-			"path": "pages/form/form",
+			"path": "pages/channel-form/channel-form",
+			"style": {
+				"navigationBarTitleText": "选择收集表单类型"
+			}
+		},
+		{
+			"path": "pages/form/achievement-form",
 			"style": {
 				"navigationBarTitleText": "成果信息收集"
+			}
+		},
+		{
+			"path": "pages/form/competition-form",
+			"style": {
+				"navigationBarTitleText": "竞赛信息收集"
+			}
+		},
+		{
+			"path": "pages/form/paper-form",
+			"style": {
+				"navigationBarTitleText": "论文信息收集"
+			}
+		},
+		{
+			"path": "pages/form/patent-form",
+			"style": {
+				"navigationBarTitleText": "专利信息收集"
+			}
+		},
+		{
+			"path": "pages/form/other-form",
+			"style": {
+				"navigationBarTitleText": "其他信息收集"
 			}
 		}
 	],
@@ -48,7 +89,7 @@
 		"backgroundColor": "#F8F8F8"
 	},
 	"tabBar": {
-		"custom": true,
+		"custom": false,
 		"color": "#7A7E83",
 		"selectedColor": "#409EFF",
 		"borderStyle": "black",
@@ -56,15 +97,21 @@
 		"list": [
 			{
 				"pagePath": "pages/home/home",
-				"text": "首页"
+				"text": "首页",
+				"iconPath": "static/tabbar/home.png",
+				"selectedIconPath": "static/tabbar/home-active.png"
 			},
 			{
 				"pagePath": "pages/honor/honor",
-				"text": "荣誉"
+				"text": "荣誉",
+				"iconPath": "static/tabbar/honor.png",
+				"selectedIconPath": "static/tabbar/honor-active.png"
 			},
 			{
 				"pagePath": "pages/profile/profile",
-				"text": "我的"
+				"text": "我的",
+				"iconPath": "static/tabbar/profile.png",
+				"selectedIconPath": "static/tabbar/profile-active.png"
 			}
 		]
 	}

@@ -1,9 +1,5 @@
 <template>
   <view class="form-container">
-    <view class="form-header">
-      <text class="form-title">成果信息收集</text>
-    </view>
-    
     <view class="form-content">
       <view class="form-item">
         <text class="label required">成果名称</text>
@@ -22,11 +18,22 @@
           mode="selector" 
           :range="achievementTypes" 
           @change="handleTypeChange"
+          :value="achievementTypeIndex"
         >
           <view class="picker-text" :class="{ empty: !formData.type }">
             {{ formData.type || '请选择成果类型' }}
           </view>
         </picker>
+      </view>
+
+      <view class="form-item">
+        <text class="label required">指导老师</text>
+        <input 
+          class="input" 
+          v-model="formData.teacher" 
+          placeholder="请输入指导老师姓名"
+          placeholder-class="placeholder"
+        />
       </view>
       
       <view class="form-item">
@@ -75,16 +82,34 @@ export default {
       formData: {
         name: '',
         type: '',
+        teacher: '',
         date: '',
         description: '',
-        image: ''
+        image: '',
+        presetField: ''
       },
+      achievementTypeIndex: -1,
       achievementTypes: ['证书', '奖项', '竞赛', '论文', '专利', '其他']
+    }
+  },
+  onLoad(options) {
+    if (options.type) {
+      const type = decodeURIComponent(options.type)
+      const index = this.achievementTypes.indexOf(type)
+      if (index !== -1) {
+        this.achievementTypeIndex = index
+        this.formData.type = this.achievementTypes[index]
+      }
+    }
+    if (options.preset) {
+      this.formData.presetField = decodeURIComponent(options.preset)
     }
   },
   methods: {
     handleTypeChange(e) {
-      this.formData.type = this.achievementTypes[e.detail.value]
+      const index = e.detail.value
+      this.achievementTypeIndex = index
+      this.formData.type = this.achievementTypes[index]
     },
     handleDateChange(e) {
       this.formData.date = e.detail.value
@@ -98,7 +123,6 @@ export default {
       })
     },
     submitForm() {
-      // 表单验证
       if (!this.formData.name) {
         uni.showToast({
           title: '请输入成果名称',
@@ -113,8 +137,14 @@ export default {
         })
         return
       }
+      if (!this.formData.teacher) {
+        uni.showToast({
+          title: '请输入指导老师姓名',
+          icon: 'none'
+        })
+        return
+      }
       
-      // TODO: 提交表单数据到服务器
       console.log('提交的表单数据：', this.formData)
       uni.showToast({
         title: '提交成功',
@@ -131,16 +161,6 @@ export default {
   min-height: 100vh;
   background-color: #f5f7fa;
   padding: 30rpx;
-}
-
-.form-header {
-  margin-bottom: 40rpx;
-}
-
-.form-title {
-  font-size: 36rpx;
-  font-weight: bold;
-  color: #333;
 }
 
 .form-content {

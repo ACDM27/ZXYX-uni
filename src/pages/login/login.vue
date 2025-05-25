@@ -326,8 +326,8 @@ export default {
       }
 
       .third-party-login {
-        margin-top: auto;
-        padding-top: 100rpx;
+        margin-top: 40rpx;
+        padding-top: 40rpx;
         
         .divider {
           position: relative;
@@ -384,9 +384,9 @@ export default {
 
     .agreement-text {
       text-align: center;
-      padding: 40rpx 30rpx;
+      padding: 20rpx 30rpx;
       font-size: 24rpx;
-      margin-top: auto;
+      margin-top: 20rpx;
       
       .normal-text {
         color: #909399;
