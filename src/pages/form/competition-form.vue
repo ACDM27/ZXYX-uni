@@ -284,9 +284,19 @@
 </template>
 
 <script>
+import { useUserStore } from '@/store/user'
+import { storeToRefs } from 'pinia'
+import { createOrUpdateAchievement, submitAchievement } from '@/api/achievement'
+
 export default {
   data() {
+    const userStore = useUserStore()
+    const { userId, role } = storeToRefs(userStore)
+    
     return {
+      userStore,
+      userId: userId.value,
+      userRole: role.value,
       formData: {
         name: '',
         level: '',
@@ -295,7 +305,14 @@ export default {
         date: '',
         description: '',
         image: '',
-        presetField: ''
+        presetField: '',
+        organizer: '',
+        is_A_class: false,
+        edition: '',
+        work_name: '',
+        award_grade: '',
+        award_time: '',
+        certificate: ''
       },
       levelIndex: -1,
       awardLevelIndex: -1,
@@ -347,7 +364,8 @@ export default {
         }
       })
     },
-    submitForm() {
+    submitForm(submitForReview = false) {
+      // 表单验证
       if (!this.formData.name) {
         uni.showToast({
           title: '请输入竞赛名称',
@@ -369,19 +387,102 @@ export default {
         })
         return
       }
-      if (!this.formData.teacher) {
-        uni.showToast({
-          title: '请输入指导老师姓名',
-          icon: 'none'
+      
+      // 构建所有参与者数据
+      const allParticipants = [
+        ...this.students.map(s => ({
+          user_id: s.type === '校内' ? s.number : null,
+          external_name: s.type === '校外' ? s.name : null,
+          role_type: 'student',
+          is_primary: s.type === '本人'
+        })),
+        ...this.teachers.map(t => ({
+          user_id: t.type === '校内' ? t.number : null,
+          external_name: t.type === '校外' ? t.name : null,
+          role_type: 'teacher',
+          is_primary: false
+        }))
+      ]
+      
+      // 如果当前用户是学生但不在参与者中，自动添加
+      const userStore = useUserStore()
+      if (userStore.role === 'student' && !allParticipants.some(p => p.role_type === 'student' && p.user_id === userStore.userId)) {
+        allParticipants.push({
+          user_id: userStore.userId,
+          external_name: null,
+          role_type: 'student',
+          is_primary: false
         })
-        return
       }
       
-      console.log('提交的表单数据：', this.formData)
-      uni.showToast({
-        title: '提交成功',
-        icon: 'success'
+      // 构建提交数据
+      const data = {
+        type: 'competition',
+        date: new Date().toISOString(),
+        participants: JSON.parse(JSON.stringify(allParticipants)),
+        competition_info: {
+          name: this.formData.name || '',
+          organizer: this.formData.organizer || '',
+          is_A_class: Boolean(this.formData.is_A_class),
+          edition: this.formData.edition || '',
+          work_name: this.formData.work_name || '',
+          level: this.formData.level || '',
+          award_grade: this.formData.award_grade || '',
+          award_time: this.formData.award_time || '',
+          certificate: this.formData.certificate || ''
+        }
+      }
+      
+      // 显示加载提示
+      uni.showLoading({
+        title: '提交中...',
+        mask: true
       })
+      
+      // 调用API提交数据
+      createOrUpdateAchievement(data, this.editMode ? this.currentAchievementId : null)
+        .then(response => {
+          const achievementId = response.data?.id || response.id || this.currentAchievementId
+          
+          if (submitForReview && achievementId) {
+            // 如果需要直接提交审核
+            return submitAchievement(achievementId)
+              .then(() => {
+                uni.showToast({
+                  title: this.editMode ? '更新并提交成果成功' : '创建并提交成果成功',
+                  icon: 'success'
+                })
+                // 关闭表单并刷新列表
+                this.closeForm()
+                this.$emit('refresh')
+              })
+              .catch(error => {
+                console.error('提交成果失败:', error)
+                uni.showToast({
+                  title: '提交成果失败，但已保存为草稿',
+                  icon: 'none'
+                })
+              })
+          } else {
+            uni.showToast({
+              title: this.editMode ? '更新竞赛成果成功' : '创建竞赛成果成功',
+              icon: 'success'
+            })
+            // 关闭表单并刷新列表
+            this.closeForm()
+            this.$emit('refresh')
+          }
+        })
+        .catch(error => {
+          console.error(this.editMode ? '更新竞赛成果失败:' : '创建竞赛成果失败:', error)
+          uni.showToast({
+            title: this.editMode ? '更新竞赛成果失败' : '创建竞赛成果失败',
+            icon: 'none'
+          })
+        })
+        .finally(() => {
+          uni.hideLoading()
+        })
     },
     // 学生相关方法
     addSelf() {
@@ -532,6 +633,11 @@ export default {
 
     removeTeacher(index) {
       this.teachers.splice(index, 1)
+    },
+    
+    // 关闭表单
+    closeForm() {
+      uni.navigateBack()
     }
   }
 }

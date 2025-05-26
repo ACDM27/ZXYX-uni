@@ -1,0 +1,131 @@
+// 在本文件中可配置云数据库初始化，数据格式见：https://uniapp.dcloud.io/uniCloud/hellodb?id=db-init
+// 编写完毕后对本文件点右键，可按配置规则创建表和添加数据
+{
+  "bsonType": "object",
+  "required": [
+    "user_id",
+    "type",
+    "title",
+    "status",
+    "date"
+  ],
+  "properties": {
+    "_id": {
+      "description": "成果记录ID，系统自动生成"
+    },
+    "user_id": {
+      "bsonType": "string",
+      "description": "关联用户ID（对应uni-id-users._id）",
+      "title": "提交者用户ID",
+      "foreignKey": "uni-id-users._id"
+    },
+    "d_id": {
+      "bsonType": "string",
+      "description": "所属学院/部门ID（可选，便于分类查询）",
+      "title": "所属部门",
+      "foreignKey": "opendb-department._id"
+    },
+    "type": {
+      "bsonType": "string",
+      "description": "成果类型",
+      "title": "类型",
+      "enum": [
+        {
+          "text": "竞赛",
+          "value": "competition"
+        },
+        {
+          "text": "论文",
+          "value": "paper"
+        },
+        {
+          "text": "专利",
+          "value": "patent"
+        },
+        {
+          "text": "荣誉",
+          "value": "honor"
+        },
+        {
+          "text": "其他",
+          "value": "other"
+        }
+      ]
+    },
+    "title": {
+      "bsonType": "string",
+      "description": "成果标题",
+      "title": "标题",
+      "trim": "both"
+    },
+    "description": {
+      "bsonType": "string",
+      "description": "简要说明",
+      "title": "成果描述",
+      "trim": "both"
+    },
+    "date": {
+      "bsonType": "date",
+      "description": "成果获得日期",
+      "title": "成果时间"
+    },
+    "attachments": {
+      "bsonType": "array",
+      "description": "附件列表，如证书、图片等",
+      "title": "附件",
+      "items": {
+        "bsonType": "object",
+        "properties": {
+          "name": {
+            "bsonType": "string",
+            "description": "文件名"
+          },
+          "url": {
+            "bsonType": "string",
+            "description": "文件URL"
+          },
+          "type": {
+            "bsonType": "string",
+            "description": "文件类型"
+          }
+        }
+      }
+    },
+    "status": {
+      "bsonType": "string",
+      "description": "审核状态",
+      "title": "审核状态",
+      "defaultValue": "审核中",
+      "enum": [
+        {
+          "text": "审核中",
+          "value": "pending"
+        },
+        {
+          "text": "已通过",
+          "value": "approved"
+        },
+        {
+          "text": "已驳回",
+          "value": "rejected"
+        }
+      ]
+    },
+    "score": {
+      "bsonType": "int",
+      "description": "成果积分（用于评优）",
+      "title": "积分"
+    },
+    "created_at": {
+      "bsonType": "timestamp",
+      "description": "创建时间",
+      "forceDefaultValue": {
+        "$env": "now"
+      }
+    },
+    "updated_at": {
+      "bsonType": "timestamp",
+      "description": "最后更新时间"
+    }
+  }
+}
