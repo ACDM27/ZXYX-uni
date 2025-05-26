@@ -1,7 +1,7 @@
 import { getToken, getRefreshToken, setToken, clearToken } from './storage'
 
 // 根据环境变量获取baseURL
-const baseURL = process.env.VUE_APP_BASE_API || '/api'
+const baseURL = import.meta.env.VITE_BASE_API || ''
 
 // 是否正在刷新token
 let isRefreshing = false
@@ -215,21 +215,18 @@ const handleTokenRefresh = (config) => {
  * @returns {Promise} 请求Promise
  */
 const request = (options) => {
-  const { url, method = 'GET', data = {}, params, headers = {} } = options
-  
-  // 添加token到请求头
-  const token = getToken()
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`
-  }
+  const { url, method = 'GET', data = {}, header = {}, ...rest } = options
   
   // 合并请求配置
   const config = {
     url: url.startsWith('http') ? url : baseURL + url,
     method: method.toUpperCase(), // 确保方法名大写
-    data: method === 'GET' ? params : data,
-    header: headers,
-    ...options
+    data,
+    header: {
+      'Content-Type': 'application/json;charset=UTF-8',
+      ...header
+    },
+    ...rest
   }
   
   // 请求拦截
@@ -239,39 +236,20 @@ const request = (options) => {
   return new Promise((resolve, reject) => {
     uni.request({
       ...interceptedConfig,
-      success: (res) => {
-        // 请求成功，但需要检查状态码
-        if (res.statusCode >= 200 && res.statusCode < 300) {
-          resolve(res.data)
-        } else if (res.statusCode === 401) {
-          // token过期或无效
-          clearToken()
-          uni.showToast({
-            title: '请重新登录',
-            icon: 'none'
-          })
-          // 跳转到登录页
-          setTimeout(() => {
-            uni.redirectTo({
-              url: '/pages/login/login'
-            })
-          }, 1500)
-          reject(new Error('未授权'))
-        } else {
-          const errorMsg = res.data?.message || '请求失败'
-          uni.showToast({
-            title: errorMsg,
-            icon: 'none'
-          })
-          reject(new Error(errorMsg))
-        }
+      success: (response) => {
+        // 响应拦截
+        responseInterceptor(response, interceptedConfig)
+          .then(resolve)
+          .catch(reject)
       },
-      fail: (err) => {
+      fail: (error) => {
+        const message = '网络请求失败'
         uni.showToast({
-          title: '网络请求失败',
-          icon: 'none'
+          title: message,
+          icon: 'none',
+          duration: 2000
         })
-        reject(err)
+        reject(new Error(message))
       }
     })
   })
